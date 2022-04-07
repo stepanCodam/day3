@@ -1,4 +1,6 @@
 security:
+    access_denied_url: app_home
+
     enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
@@ -36,8 +38,8 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
          - { path: ^/albums, roles: ROLE_ADMIN }
-        #  - { path: ^/home, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/(login|register)$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+  
+     
          - { path: ^/static, roles: ROLE_USER }
 
 when@test:
