@@ -11,7 +11,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+#[Route('/albums')]
 class AlbumsController extends AbstractController
+
 {
     #[Route('/albums', name:'albums')]
     public function index(ManagerRegistry $doctrine): Response
