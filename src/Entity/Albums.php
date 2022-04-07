@@ -28,6 +28,9 @@ class Albums
     #[ORM\Column(type: 'string', length: 50)]
     private $name;
 
+    #[ORM\ManyToOne(targetEntity: Status::class)]
+    public $fk_status;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -89,6 +92,18 @@ class Albums
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getFkStatus(): ?Status
+    {
+        return $this->fk_status;
+    }
+
+    public function setFkStatus(?Status $fk_status): self
+    {
+        $this->fk_status = $fk_status;
 
         return $this;
     }

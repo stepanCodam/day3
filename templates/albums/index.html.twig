@@ -13,6 +13,7 @@
                <th>Image</th>
                <th>Price</th>
                <th>Actions</th>
+               <th>Add Album</th>
            </tr>
        </thead>
        {% for album in albums %}
@@ -20,12 +21,13 @@
            <tr>
                <th scope="row">{{album.id}}</th>
                <td>{{album.name}}</td>
-               <td><img src="{{asset('pictures/'~ album.image)}}" width="150px"></td>
+               <td><img src="{{asset('images/'~ album.image)}}" width="150px"></td>
                <td>{{album.price}}</td>
                <td> <a href="/details/{{album.id}}" class="btn btn-success">View</a>     
                    <a href="/edit/{{album.id}}" class="btn btn-default">Edit</a>
                    <a href="/delete/{{album.id}}" class="btn btn-danger">Delete</a>       
                </td>
+               <td><a href="/create" class="btn btn-primary  " tabindex="-1" role="button" >Add Another album</a></td>
            </tr> 
             {% endfor %}
        </tbody>

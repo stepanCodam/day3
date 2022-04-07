@@ -3,17 +3,17 @@
 namespace App\Controller;
 
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
-
-use App\Entity\Albums;
 use App\Form\AlbumsType;
+use Symfony\Component\HttpFoundation\Request;
+use App\Service\FileUploader;
+use App\Entity\Albums;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AlbumsController extends AbstractController
 {
-    #[Route('/', name: 'albums')]
+    #[Route('/albums', name:'albums')]
     public function index(ManagerRegistry $doctrine): Response
     {
         $albums = $doctrine->getRepository(Albums::class)->findAll();
@@ -21,14 +21,20 @@ class AlbumsController extends AbstractController
     }
 
     #[Route('/create', name: 'albums_create')]
-    public function create(Request $request, ManagerRegistry $doctrine): Response
+    public function create(Request $request, ManagerRegistry $doctrine,FileUploader $fileUploader): Response
     {
         $album = new Albums();
         $form = $this->createForm(AlbumsType::class, $album);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
+            $imageFile = $form->get('image')->getData();
+            if($imageFile){
+                $imageFileName = $fileUploader->upload($imageFile);
+                $album->setImage($imageFileName);
+            }
             $album = $form->getData();
+        
             $em = $doctrine->getManager();
             $em->persist($album);
             $em->flush();
@@ -41,13 +47,18 @@ class AlbumsController extends AbstractController
         return $this->render('albums/create.html.twig',['form'=>$form->createView()]);
     }
     #[Route('/edit/{id}', name: 'albums_edit')]
-    public function edit(Request $request, ManagerRegistry $doctrine, $id): Response
+    public function edit(Request $request, ManagerRegistry $doctrine,FileUploader $fileUploader, $id): Response
     {
         $album = $doctrine->getRepository(Albums::class)->find($id);
         $form = $this->createForm(AlbumsType::class,$album);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
+            $imageFile = $form->get('image')->getData();
+            if($imageFile){
+                $imageFileName = $fileUploader->upload($imageFile);
+                $album->setImage($imageFileName);}
+                
             $album = $form->getData();
             $em = $doctrine -> getManager();
             $em ->persist($album);
